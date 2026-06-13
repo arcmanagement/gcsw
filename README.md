@@ -53,23 +53,10 @@ current `gcloud config configurations list`.
   `gcsw ` to pick a configuration. (Manual install: copy `completions/_gcsw`
   into a directory on your `fpath`.)
 - **Kiro CLI** — Kiro loads plain `.js` specs from its Specs folder (Developer
-  mode → Specs folder); `.ts` is not read. Run `gcsw update` to write the spec
-  there automatically (see below). A reference copy ships at
-  `completions/gcsw.js`.
-
-### Refreshing the spec — `gcsw update`
-
-```sh
-gcsw update
-```
-
-Regenerates the Fig/Kiro spec from the current `gcloud config configurations
-list` and writes it to your completion-specs folder, so the dropdown reflects
-configurations you've added or removed. The spec keeps a dynamic generator too,
-so tools that run it stay current automatically.
-
-The first run asks for the specs-folder path (in Kiro CLI: settings → Developer
-→ enable Dev mode, then set the Specs folder) and remembers it for next time.
+  mode → Specs folder); `.ts` is not read. Copy `completions/gcsw.js` into that
+  folder. Its generator runs `gcloud config configurations list` on every
+  completion, so the config list stays current automatically — no regeneration
+  step.
 
 ## Requirements
 
