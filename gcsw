@@ -1,0 +1,86 @@
+#!/usr/bin/env zsh
+#
+# gcsw — interactive gcloud configuration switcher
+# https://github.com/arcmanagement/gcsw
+#
+# Pick a gcloud configuration from a list (fzf or a numbered menu), activate it,
+# and align the ADC quota project to the new project — no browser needed.
+#
+emulate -L zsh
+
+readonly GCSW_VERSION="0.1.0"
+
+gcsw_help() {
+  cat <<'EOF'
+gcsw — interactive gcloud configuration switcher
+
+Usage:
+  gcsw                Pick a configuration interactively
+  gcsw <pattern>      Switch to the first configuration matching <pattern>
+  gcsw -a, --adc      Re-authenticate ADC in the browser (use when the account changes)
+  gcsw -h, --help     Show this help
+  gcsw -v, --version  Print version
+
+Without -a, gcsw activates the chosen configuration and aligns the Application
+Default Credentials (ADC) quota project to it without opening a browser. fzf is
+used for the picker when installed; otherwise a numbered menu is shown.
+EOF
+}
+
+gcsw_main() {
+  local adc_full=0 pattern=""
+  for arg in "$@"; do
+    case "$arg" in
+      -h|--help)    gcsw_help; return 0 ;;
+      -v|--version) print "gcsw ${GCSW_VERSION}"; return 0 ;;
+      -a|--adc)     adc_full=1 ;;
+      --)           ;;
+      -*)           print -u2 "gcsw: unknown option '$arg' (try --help)"; return 2 ;;
+      *)            pattern="$arg" ;;
+    esac
+  done
+
+  if ! command -v gcloud >/dev/null 2>&1; then
+    print -u2 "gcsw: gcloud not found. Install the Google Cloud CLI first."
+    return 1
+  fi
+
+  local cfg
+  if [[ -n "$pattern" ]]; then
+    cfg=$(gcloud config configurations list --format='value(name)' | grep -i -- "$pattern" | head -1)
+    if [[ -z "$cfg" ]]; then
+      print -u2 "gcsw: no configuration matching '$pattern'"
+      return 1
+    fi
+  elif command -v fzf >/dev/null 2>&1; then
+    cfg=$(gcloud config configurations list | fzf --header-lines=1 --height=40% --reverse \
+            --prompt='gcloud config> ' | awk '{print $1}')
+  else
+    local -a names; names=("${(@f)$(gcloud config configurations list --format='value(name)')}")
+    local i=1 n; for n in $names; do printf '%2d) %s\n' $i "$n"; ((i++)); done
+    printf 'select number (or name): '
+    local sel; read -r sel
+    if [[ "$sel" == <-> ]]; then cfg="${names[$sel]}"; else cfg="$sel"; fi
+  fi
+  [[ -z "$cfg" ]] && return 1
+
+  gcloud config configurations activate "$cfg" >/dev/null || return 1
+
+  local proj account
+  proj=$(gcloud config get-value project 2>/dev/null)
+  account=$(gcloud config get-value account 2>/dev/null)
+
+  if (( adc_full )); then
+    gcloud auth application-default login
+  elif [[ -n "$proj" ]]; then
+    if gcloud auth application-default set-quota-project "$proj" >/dev/null 2>&1; then
+      print "  ADC quota project -> $proj"
+    else
+      print "  ADC quota project unchanged (no permission on $proj)"
+    fi
+  fi
+
+  print "OK  $cfg  [${account:-no account} / ${proj:-no project}]"
+}
+
+gcsw_main "$@"
