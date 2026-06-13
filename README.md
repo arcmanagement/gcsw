@@ -56,6 +56,20 @@ current `gcloud config configurations list`.
   `completions/gcsw.ts`. Add it to your tool's custom autocomplete specs for a
   dropdown of configuration names.
 
+### Refreshing the spec — `gcsw update`
+
+```sh
+gcsw update
+```
+
+Regenerates the Fig/Kiro spec from the current `gcloud config configurations
+list` and writes it to your completion-specs folder, so the dropdown reflects
+configurations you've added or removed. The spec keeps a dynamic generator too,
+so tools that run it stay current automatically.
+
+The first run asks for the specs-folder path (in Kiro CLI: settings → Developer
+→ enable Dev mode, then set the Specs folder) and remembers it for next time.
+
 ## Requirements
 
 - [Google Cloud CLI](https://cloud.google.com/sdk) (`gcloud`)
