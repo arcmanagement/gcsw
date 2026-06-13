@@ -2,7 +2,7 @@ class Gcsw < Formula
   desc "Interactive gcloud configuration switcher"
   homepage "https://github.com/arcmanagement/gcsw"
   url "https://github.com/arcmanagement/gcsw/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  sha256 "0751c063091b841fde18695172c97d8b967703dc0d8ab733c9aec49059e63f45"
   license "MIT"
   head "https://github.com/arcmanagement/gcsw.git", branch: "main"
 
