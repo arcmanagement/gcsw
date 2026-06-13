@@ -1,8 +1,8 @@
 class Gcsw < Formula
   desc "Interactive gcloud configuration switcher"
   homepage "https://github.com/arcmanagement/gcsw"
-  url "https://github.com/arcmanagement/gcsw/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "bdd798a4e9dbd61edee823121d2060f7ee0fbdd57a0f5a020b9438b39d525881"
+  url "https://github.com/arcmanagement/gcsw/archive/refs/tags/v0.2.0.tar.gz"
+  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT"
   head "https://github.com/arcmanagement/gcsw.git", branch: "main"
 
@@ -10,6 +10,7 @@ class Gcsw < Formula
 
   def install
     bin.install "gcsw"
+    zsh_completion.install "completions/_gcsw"
   end
 
   test do

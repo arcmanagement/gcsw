@@ -44,6 +44,18 @@ On switch, `gcsw`:
 Use `-a` only when the underlying account changes; that's the one case that
 needs a browser round-trip.
 
+## Shell completion
+
+Configuration names are completed dynamically — the list always reflects your
+current `gcloud config configurations list`.
+
+- **zsh** — installed automatically with Homebrew. Press <kbd>Tab</kbd> after
+  `gcsw ` to pick a configuration. (Manual install: copy `completions/_gcsw`
+  into a directory on your `fpath`.)
+- **Kiro CLI / Amazon Q / Fig** — a Fig-format spec ships at
+  `completions/gcsw.ts`. Add it to your tool's custom autocomplete specs for a
+  dropdown of configuration names.
+
 ## Requirements
 
 - [Google Cloud CLI](https://cloud.google.com/sdk) (`gcloud`)
