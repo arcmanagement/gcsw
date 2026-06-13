@@ -52,9 +52,10 @@ current `gcloud config configurations list`.
 - **zsh** — installed automatically with Homebrew. Press <kbd>Tab</kbd> after
   `gcsw ` to pick a configuration. (Manual install: copy `completions/_gcsw`
   into a directory on your `fpath`.)
-- **Kiro CLI / Amazon Q / Fig** — a Fig-format spec ships at
-  `completions/gcsw.ts`. Add it to your tool's custom autocomplete specs for a
-  dropdown of configuration names.
+- **Kiro CLI** — Kiro loads plain `.js` specs from its Specs folder (Developer
+  mode → Specs folder); `.ts` is not read. Run `gcsw update` to write the spec
+  there automatically (see below). A reference copy ships at
+  `completions/gcsw.js`.
 
 ### Refreshing the spec — `gcsw update`
 

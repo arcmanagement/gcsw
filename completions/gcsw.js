@@ -1,13 +1,21 @@
-// Fig / Amazon Q / Kiro CLI completion spec for gcsw.
+// Completion spec for gcsw (plain .js — Kiro CLI loads .js specs, not .ts).
 //
-// The configuration list is generated dynamically at completion time, so the
-// dropdown always reflects the current `gcloud config configurations list`.
+// Configuration names are generated dynamically at completion time, so the
+// dropdown reflects the current `gcloud config configurations list`.
 //
-// To use with Kiro CLI / Amazon Q / Fig, place this spec where your tool loads
-// custom autocomplete specs (see README "Shell completion").
-const completionSpec: Fig.Spec = {
+// `gcsw update` writes a copy of this spec (with the current configurations
+// also baked in as static suggestions) into your Kiro Specs folder. This file
+// is the reference / starting point.
+
+const completionSpec = {
   name: "gcsw",
   description: "Interactive gcloud configuration switcher",
+  subcommands: [
+    {
+      name: "update",
+      description: "Refresh the completion spec from the current configuration list",
+    },
+  ],
   args: {
     name: "configuration",
     description: "gcloud configuration to switch to",
