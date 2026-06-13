@@ -8,7 +8,7 @@
 #
 emulate -L zsh
 
-readonly GCSW_VERSION="0.3.0"
+readonly GCSW_VERSION="0.3.1"
 readonly GCSW_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/gcsw"
 readonly GCSW_KIRO_SPECS_KEY="autocomplete.devCompletionsFolder"
 
@@ -31,15 +31,17 @@ EOF
 }
 
 # Resolve the completion-specs folder, or fail if unknown.
-# Order: gcsw's own saved path -> Kiro CLI setting.
+# Order: Kiro CLI's configured folder (source of truth) -> gcsw's saved path.
 gcsw_specs_dir() {
+  # If kiro-cli is installed and has a Specs folder set, drop the spec there.
+  if command -v kiro-cli >/dev/null 2>&1; then
+    local kdir; kdir=$(kiro-cli settings "$GCSW_KIRO_SPECS_KEY" 2>/dev/null)
+    kdir=${kdir//\"/}
+    [[ -n "$kdir" && "$kdir" != error:* ]] && { print -r -- "${kdir/#\~/$HOME}"; return 0 }
+  fi
   if [[ -f "$GCSW_CONFIG_DIR/specs_dir" ]]; then
     local saved; saved=$(<"$GCSW_CONFIG_DIR/specs_dir")
     [[ -n "$saved" ]] && { print -r -- "$saved"; return 0 }
-  fi
-  if command -v kiro-cli >/dev/null 2>&1; then
-    local kdir; kdir=$(kiro-cli settings "$GCSW_KIRO_SPECS_KEY" 2>/dev/null)
-    [[ -n "$kdir" && "$kdir" != error:* ]] && { print -r -- "$kdir"; return 0 }
   fi
   return 1
 }
