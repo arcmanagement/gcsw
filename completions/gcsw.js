@@ -1,21 +1,13 @@
 // Completion spec for gcsw (plain .js — Kiro CLI loads .js specs, not .ts).
 //
-// Configuration names are generated dynamically at completion time, so the
-// dropdown reflects the current `gcloud config configurations list`.
-//
-// `gcsw update` writes a copy of this spec (with the current configurations
-// also baked in as static suggestions) into your Kiro Specs folder. This file
-// is the reference / starting point.
+// The configuration list is generated dynamically: every time you complete,
+// the generator runs `gcloud config configurations list`, so the dropdown
+// always reflects your current configurations. No regeneration step needed —
+// drop this file in your Kiro Specs folder once.
 
 const completionSpec = {
   name: "gcsw",
   description: "Interactive gcloud configuration switcher",
-  subcommands: [
-    {
-      name: "update",
-      description: "Refresh the completion spec from the current configuration list",
-    },
-  ],
   args: {
     name: "configuration",
     description: "gcloud configuration to switch to",
